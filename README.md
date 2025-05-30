@@ -15,26 +15,64 @@
 - 🛡️ Безопасное логирование с маскированием чувствительных данных
 
 
+
+
 ## Установка
 
 ### Gradle
 
+Добавьте JitPack репозиторий в ваш `settings.gradle`:
+
+```gradle
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+Затем добавьте зависимость в `build.gradle`:
+
 ```gradle
 dependencies {
-    implementation 'com.yookassa:yookassa-spring-boot-starter:1.0.6'
+    implementation 'com.github.GridyushkoF:YooKassaJavaSdk:v1.0.6'
 }
 ```
 
 
 ### Maven
 
+Добавьте JitPack репозиторий в ваш `pom.xml`:
+
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+
+Затем добавьте зависимость:
+
 ```xml
 <dependency>
-    <groupId>com.yookassa</groupId>
-    <artifactId>yookassa-spring-boot-starter</artifactId>
-    <version>1.0.6</version>
+    <groupId>com.github.GridyushkoF</groupId>
+    <artifactId>YooKassaJavaSdk</artifactId>
+    <version>v1.0.6</version>
 </dependency>
 ```
+
+### Альтернативные версии
+
+Вы также можете использовать:
+
+- Последний коммит из main ветки:
+- Конкретный коммит: `commit-hash`
+- Другой тег: , например `v1.0.5`
+- Но рекоммендуется использовать последнюю версию чтобы не упускать новые возможности
 
 
 ## Быстрый старт
