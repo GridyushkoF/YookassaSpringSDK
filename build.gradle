@@ -1,0 +1,109 @@
+plugins {
+    id 'java-library'
+    id 'org.springframework.boot' version '3.2.10'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'maven-publish'
+}
+
+group = 'com.yookassa.spring'
+version = '1.0.0'
+sourceCompatibility = '17'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot стартеры
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
+
+    // Конфигурационный процессор
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    // Jackson для работы с JSON
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations'
+
+    // HTTP клиент
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
+
+    // Утилиты
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+    // Логирование
+    implementation 'org.slf4j:slf4j-api'
+
+    // Lombok для упрощения кода
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // Тестирование
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    // Опциональные зависимости для интеграции
+    compileOnly 'org.springframework:spring-context'
+    compileOnly 'org.springframework:spring-web'
+    compileOnly 'org.springframework.boot:spring-boot-starter-data-jpa'
+    testImplementation 'org.assertj:assertj-core'
+    testImplementation 'org.springframework.boot:spring-boot-test-autoconfigure'
+}
+
+// Конфигурация для создания JAR без исполняемого класса
+jar {
+    enabled = true
+    archiveClassifier = ''
+}
+
+// Отключаем создание исполняемого JAR для библиотеки
+bootJar {
+    enabled = false
+}
+
+// Публикация в Maven репозиторий
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+
+            pom {
+                name = 'YooKassa Spring Boot Starter'
+                description = 'Spring Boot starter for YooKassa payment integration'
+                url = 'https://github.com/your-org/yookassa-spring-boot-starter'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'your-id'
+                        name = 'Your Name'
+                        email = 'your.email@example.com'
+                    }
+                }
+            }
+        }
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// Генерация метаданных для IDE
+compileJava {
+    options.compilerArgs += ['-parameters']
+}

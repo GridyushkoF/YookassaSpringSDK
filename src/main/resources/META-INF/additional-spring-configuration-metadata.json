@@ -1,0 +1,44 @@
+{
+  "properties": [
+    {
+      "name": "yookassa.shop-id",
+      "type": "java.lang.String",
+      "description": "YooKassa shop identifier"
+    },
+    {
+      "name": "yookassa.secret-key",
+      "type": "java.lang.String",
+      "description": "YooKassa secret key for API authentication"
+    },
+    {
+      "name": "yookassa.api-url",
+      "type": "java.lang.String",
+      "description": "YooKassa API base URL",
+      "defaultValue": "https://api.yookassa.ru"
+    },
+    {
+      "name": "yookassa.webhook.path",
+      "type": "java.lang.String",
+      "description": "Webhook endpoint path",
+      "defaultValue": "/api/webhooks/yookassa"
+    },
+    {
+      "name": "yookassa.webhook.signature-validation-enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable webhook signature validation",
+      "defaultValue": true
+    },
+    {
+      "name": "yookassa.scheduler.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable payment status scheduler",
+      "defaultValue": true
+    },
+    {
+      "name": "yookassa.scheduler.check-interval",
+      "type": "java.lang.Long",
+      "description": "Payment status check interval in milliseconds",
+      "defaultValue": 60000
+    }
+  ]
+}
