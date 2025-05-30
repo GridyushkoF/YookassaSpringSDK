@@ -32,7 +32,7 @@ public class PaymentUtils {
         return Arrays.asList("RUB", "USD", "EUR").contains(currency.toUpperCase());
     }
 
-    public static String extractClientIP(HttpServletRequest request) {
+    public static String getClientIp(HttpServletRequest request) {
         String xRealIP = request.getHeader("X-Real-IP");
         if (xRealIP != null && !xRealIP.isEmpty()) {
             return xRealIP;

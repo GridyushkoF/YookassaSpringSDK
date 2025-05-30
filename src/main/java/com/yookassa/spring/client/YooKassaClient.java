@@ -7,13 +7,11 @@ import com.yookassa.spring.exception.YooKassaApiException;
 import com.yookassa.spring.exception.YooKassaErrorHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Base64;
 import java.util.UUID;
 
-@Component
 @Slf4j
 public class YooKassaClient {
 

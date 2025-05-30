@@ -2,11 +2,9 @@ package com.yookassa.spring.validation;
 
 import com.yookassa.spring.PaymentRequest;
 import com.yookassa.spring.util.PaymentUtils;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
-@Component
 public class PaymentValidator {
 
     public void validatePaymentRequest(PaymentRequest request) {

@@ -8,8 +8,10 @@ import com.yookassa.spring.handlers.PaymentEventHandler;
 import com.yookassa.spring.handlers.PaymentHandlerRegistry;
 import com.yookassa.spring.scheduler.InMemoryPaymentStatusRepository;
 import com.yookassa.spring.scheduler.PaymentStatusRepository;
+import com.yookassa.spring.scheduler.PaymentStatusScheduler;
 import com.yookassa.spring.scheduler.PaymentStatusService;
 import com.yookassa.spring.validation.PaymentValidator;
+import com.yookassa.spring.webhook.WebhookController;
 import com.yookassa.spring.webhook.WebhookProcessor;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -26,15 +28,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableConfigurationProperties(YooKassaProperties.class)
 @ConditionalOnProperty(prefix = "yookassa", name = "shop-id")
 @EnableScheduling
+@Import(JacksonConfig.class) // Добавьте этот импорт
 @Slf4j
-@Import(JacksonConfig.class)
 public class YooKassaAutoConfiguration {
 
-    @Bean
-    @ConditionalOnMissingBean
-    public PaymentStatusRepository paymentStatusRepository() {
-        return new InMemoryPaymentStatusRepository();
-    }
     @Bean
     @ConditionalOnMissingBean
     public IPValidator ipValidator() {
@@ -43,8 +40,35 @@ public class YooKassaAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    public PaymentStatusRepository paymentStatusRepository() {
+        return new InMemoryPaymentStatusRepository();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public PaymentStatusService paymentStatusService(PaymentStatusRepository repository) {
+        return new PaymentStatusService(repository);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public PaymentValidator paymentValidator() {
+        return new PaymentValidator();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     public YooKassaClient yooKassaClient(YooKassaProperties properties, ObjectMapper objectMapper) {
         return new YooKassaClient(properties, objectMapper);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public YooKassaService yooKassaService(YooKassaClient client,
+                                           PaymentStatusService paymentStatusService,
+                                           ApplicationEventPublisher eventPublisher,
+                                           PaymentValidator paymentValidator) {
+        return new YooKassaService(client, paymentStatusService, eventPublisher, paymentValidator);
     }
 
     @Bean
@@ -69,22 +93,18 @@ public class YooKassaAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public PaymentStatusService paymentStatusService(PaymentStatusRepository repository) {
-        return new PaymentStatusService(repository);
+    public WebhookController webhookController(WebhookProcessor webhookProcessor,
+                                               ApplicationEventPublisher eventPublisher) {
+        return new WebhookController(webhookProcessor, eventPublisher);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public YooKassaService yooKassaService(YooKassaClient client,
-                                           PaymentStatusService paymentStatusService,
-                                           ApplicationEventPublisher eventPublisher) {
-        return new YooKassaService(client, paymentStatusService, eventPublisher,paymentValidator());
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public PaymentValidator paymentValidator() {
-        return new PaymentValidator();
+    public PaymentStatusScheduler paymentStatusScheduler(PaymentStatusService paymentStatusService,
+                                                         YooKassaClient yooKassaClient,
+                                                         ApplicationEventPublisher eventPublisher,
+                                                         YooKassaProperties properties) {
+        return new PaymentStatusScheduler(paymentStatusService, yooKassaClient, eventPublisher, properties);
     }
 
     @PostConstruct

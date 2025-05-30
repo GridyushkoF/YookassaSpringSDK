@@ -5,6 +5,7 @@ import com.yookassa.spring.events.PaymentCanceledEvent;
 import com.yookassa.spring.events.PaymentEvent;
 import com.yookassa.spring.events.PaymentSucceededEvent;
 import com.yookassa.spring.events.PaymentWaitingForCaptureEvent;
+import com.yookassa.spring.util.PaymentUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -37,7 +38,7 @@ public class WebhookController {
         try {
             // Валидация webhook
             if (!webhookProcessor.validateWebhook(requestBody, headers, request)) {
-                log.warn("Invalid webhook received from IP: {}", getClientIP(request));
+                log.warn("Invalid webhook received from IP: {}", PaymentUtils.getClientIp(request));
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 
@@ -74,8 +75,6 @@ public class WebhookController {
         }
     }
 
-    private String getClientIP(HttpServletRequest request) {
-        return WebhookProcessor.getClientIP(request);
-    }
+
 
 }

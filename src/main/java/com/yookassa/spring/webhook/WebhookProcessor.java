@@ -4,16 +4,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yookassa.spring.autoconfigure.YooKassaProperties;
 import com.yookassa.spring.client.IPValidator;
+import com.yookassa.spring.util.PaymentUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 import java.util.Map;
 
-@Component
 @Slf4j
 public class WebhookProcessor {
 
@@ -68,17 +67,8 @@ public class WebhookProcessor {
         return Base64.getEncoder().encodeToString(hash);
     }
 
-    public static String getClientIP(HttpServletRequest request) {
-        String xRealIP = request.getHeader("X-Real-IP");
-        if (xRealIP != null && !xRealIP.isEmpty()) {
-            return xRealIP;
-        }
-
-        String xForwardedFor = request.getHeader("X-Forwarded-For");
-        if (xForwardedFor != null && !xForwardedFor.isEmpty()) {
-            return xForwardedFor.split(",")[0].trim();
-        }
-
-        return request.getRemoteAddr();
+    public String getClientIP(HttpServletRequest request) {
+        return PaymentUtils.getClientIp(request);
     }
+
 }
