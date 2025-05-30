@@ -23,12 +23,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @EnableConfigurationProperties(YooKassaProperties.class)
 @ConditionalOnProperty(prefix = "yookassa", name = "shop-id")
 @EnableScheduling
-@Import(JacksonConfig.class) // Добавьте этот импорт
+@Import(YooKassaRestTemplateConfig.class) // Добавьте этот импорт
 @Slf4j
 public class YooKassaAutoConfiguration {
 
@@ -58,8 +59,8 @@ public class YooKassaAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public YooKassaClient yooKassaClient(YooKassaProperties properties, ObjectMapper objectMapper) {
-        return new YooKassaClient(properties, objectMapper);
+    public YooKassaClient yooKassaClient(YooKassaProperties properties, RestTemplate restTemplate) {
+        return new YooKassaClient(properties, restTemplate);
     }
 
     @Bean

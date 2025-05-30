@@ -6,6 +6,7 @@ import com.yookassa.spring.domain.Payment;
 import com.yookassa.spring.exception.YooKassaApiException;
 import com.yookassa.spring.exception.YooKassaErrorHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,14 +18,12 @@ public class YooKassaClient {
 
     private final RestTemplate restTemplate;
     private final YooKassaProperties properties;
-    private final ObjectMapper objectMapper;
 
-    public YooKassaClient(YooKassaProperties properties, ObjectMapper objectMapper) {
+    public YooKassaClient(YooKassaProperties properties,
+                          @Qualifier("yooKassaRestTemplate") RestTemplate restTemplate) {
         this.properties = properties;
-        this.objectMapper = objectMapper;
-        this.restTemplate = createRestTemplate();
+        this.restTemplate = restTemplate;
     }
-
     public Payment createPayment(CreatePaymentRequest request) {
         try {
             String idempotenceKey = UUID.randomUUID().toString();
